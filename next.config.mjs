@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -7,11 +8,12 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    domains: ['v0.blob.com'],
     unoptimized: true,
   },
-  webpack: (config) => {
-    config.resolve.fallback = { ...config.resolve.fallback, fs: false };
-    return config;
+  // Add environment variables to be available at build time
+  env: {
+    NEXT_PHASE: process.env.NEXT_PHASE || '',
   },
 }
 

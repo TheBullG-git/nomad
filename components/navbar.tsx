@@ -42,11 +42,11 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled || isOpen ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+        isScrolled || isOpen ? "bg-background/95 backdrop-blur-sm border-b" : "bg-transparent"
       }`}
     >
-      <div className="container flex items-center justify-between h-16 md:h-20">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -54,7 +54,7 @@ export function Navbar() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2"
           >
-            <Dumbbell className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            <Dumbbell className="h-6 w-6 text-purple-500" />
             <span className="font-bold text-xl md:text-2xl">NomadFitness</span>
           </motion.div>
         </Link>
@@ -66,9 +66,7 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                pathname === link.href
-                  ? "text-purple-600 dark:text-purple-400"
-                  : "text-gray-700 hover:text-purple-600 dark:text-gray-200 dark:hover:text-purple-400"
+                pathname === link.href ? "text-purple-500" : "text-foreground/70 hover:text-purple-500"
               }`}
             >
               {link.label}
@@ -83,11 +81,12 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="flex items-center md:hidden space-x-4">
+        {/* Mobile Menu Button - ONLY shown on mobile */}
+        <div className="md:hidden flex items-center space-x-4">
           <ModeToggle />
-          <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
+          <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)} className="p-1">
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <span className="sr-only">Toggle menu</span>
           </Button>
         </div>
       </div>
@@ -99,24 +98,24 @@ export function Navbar() {
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800"
+          className="md:hidden border-t bg-background"
         >
-          <div className="container py-4">
-            <nav className="flex flex-col space-y-2">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     pathname === link.href
-                      ? "bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
-                      : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                      ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                      : "hover:bg-muted"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              <Button asChild className="mt-2 bg-purple-600 hover:bg-purple-700">
+              <Button asChild className="w-full mt-2 bg-purple-600 hover:bg-purple-700">
                 <Link href="/booking">Book Now</Link>
               </Button>
             </nav>
