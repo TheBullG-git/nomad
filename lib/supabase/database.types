@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface Database {
   public: {
@@ -79,7 +73,71 @@ export interface Database {
           updated_at?: string
         }
       }
-      bookings: {
+      orders: {
+        Row: {
+          id: string
+          user_id: string
+          total_amount: number
+          payment_method: string
+          payment_status: string
+          order_status: string
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          total_amount: number
+          payment_method?: string
+          payment_status?: string
+          order_status?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          total_amount?: number
+          payment_method?: string
+          payment_status?: string
+          order_status?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          service_id: string
+          quantity: number
+          price: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          service_id: string
+          quantity: number
+          price: number
+          created_at: string
+          updated_at: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          service_id?: string
+          quantity?: number
+          price?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+       bookings: {
         Row: {
           id: string
           user_id: string | null
@@ -221,8 +279,8 @@ export interface Database {
           trainer_notes?: string | null
           user_feedback?: string | null
           session_rating?: number | null
-          created_at: string
-          updated_at: string
+          created_at?: string
+          updated_at?: string
         }
       }
       truck_fleet: {
@@ -266,7 +324,7 @@ export interface Database {
         Insert: {
           booking_id: string
           truck_id: string
-          assigned_at?: string
+          assigned_at: string
         }
         Update: {
           booking_id?: string
@@ -283,7 +341,7 @@ export interface Database {
         Insert: {
           booking_id: string
           preference_type: "consistent" | "flexible"
-          preferred_time?: string | null
+          preferred_time: string | null
         }
         Update: {
           booking_id?: string

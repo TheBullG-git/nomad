@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dumbbell, Headphones, Heart, Play, Pause, Volume2, VolumeX } from "lucide-react"
+import Image from "next/image"
 
 function Model({ setCurrentSection, currentSection }) {
   const { scene } = useGLTF("/assets/3d/duck.glb")
@@ -127,14 +128,12 @@ export default function TruckTourPage() {
   const [currentSection, setCurrentSection] = useState("weights")
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
-  const [audio] = useState(new Audio("/placeholder.mp3"))
   const audioRef = useRef(null)
 
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
-        \
-        audioRef.current.play()ef.current.play()
+        audioRef.current.play()
       } else {
         audioRef.current.pause()
       }
@@ -300,7 +299,7 @@ export default function TruckTourPage() {
                 </div>
                 <div className="rounded-lg overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=300&width=500&query=gym recovery equipment"
+                    src="/gym-recovery-zone.png"
                     alt="Recovery Corner"
                     width={500}
                     height={300}
