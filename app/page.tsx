@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { ArrowRight, Clock, Dumbbell, MapPin, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { LocationBadge } from "@/components/location-badge"
 
 // Only the mobile gym service as the sole offering
 const mobileGymService = {
@@ -69,6 +70,17 @@ export default function Home() {
             Experience the convenience of a fully-equipped gym that comes to you. Professional trainers, premium
             equipment, and personalized workouts — all at your doorstep.
           </motion.p>
+
+          {/* Location Badge */}
+          <motion.div
+            className="mt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <LocationBadge className="bg-white/20 text-white border border-white/30" />
+          </motion.div>
+
           <motion.div
             className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
             initial={{ opacity: 0, y: 20 }}
@@ -123,6 +135,9 @@ export default function Home() {
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
               Experience the ultimate convenience with our mobile gym that comes to your location.
             </p>
+            <div className="mt-2 flex justify-center">
+              <LocationBadge variant="outline" />
+            </div>
           </div>
           <div className="max-w-3xl mx-auto">
             <motion.div
@@ -187,7 +202,7 @@ export default function Home() {
               viewport={{ once: true }}
             >
               Take the first step toward a healthier lifestyle with NomadFitness. Our mobile gym brings convenience and
-              professional guidance right to your doorstep.
+              professional guidance right to your doorstep in Rajkot.
             </motion.p>
             <motion.div
               className="mt-8"
