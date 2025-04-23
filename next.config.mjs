@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  // Remove swcMinify as it's no longer recognized in Next.js 15
+  // swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -18,9 +19,9 @@ const nextConfig = {
   },
   // Ensure proper output
   output: 'standalone',
-  // Experimental features
+  // Update experimental features - remove optimizeCss
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // Remove this line
     scrollRestoration: true,
   },
 }
