@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
-    unoptimized: true,
+    unoptimized: true, // Important for Cloudflare Pages
+    domains: ['v0.blob.com'], // Add any image domains you're using
   },
 }
 
