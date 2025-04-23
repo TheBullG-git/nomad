@@ -1,22 +1,74 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
+interface BookingData {
+  date?: Date
+  time?: string
+  name?: string
+  email?: string
+  phone?: string
+  address?: string
+  notes?: string
+  plan?: string
+}
+
+// Available plans
+const plans = {
+  "single-session": {
+    name: "Single Session",
+    price: 300,
+  },
+  monthly: {
+    name: "Monthly Plan",
+    price: 7000,
+  },
+  quarterly: {
+    name: "Quarterly Plan",
+    price: 15000,
+  },
+  yearly: {
+    name: "Yearly Plan",
+    price: 25000,
+  },
+}
+
 export default function ConfirmationPage() {
+  const [bookingData, setBookingData] = useState<BookingData | null>(null)
+  const [bookingId, setBookingId] = useState<string | null>(null)
+
   useEffect(() => {
-    // Check if booking data exists in session storage
-    const hasBookingData = sessionStorage.getItem("bookingData")
-    if (!hasBookingData) {
-      // If no booking data, we'll still show the confirmation page
-      // but we won't have specific details to display
-      console.log("No booking data found in session storage")
+    // Get booking ID from session storage
+    const storedBookingId = sessionStorage.getItem("lastBookingId")
+    if (storedBookingId) {
+      setBookingId(storedBookingId)
+      // Clear it after retrieving
+      sessionStorage.removeItem("lastBookingId")
+    }
+
+    // Get booking data from session storage
+    const storedBookingData = sessionStorage.getItem("bookingData")
+    if (storedBookingData) {
+      try {
+        const parsedData = JSON.parse(storedBookingData)
+        // Convert date string back to Date object if it exists
+        if (parsedData.date) {
+          parsedData.date = new Date(parsedData.date)
+        }
+        setBookingData(parsedData)
+      } catch (error) {
+        console.error("Error parsing booking data:", error)
+      }
     }
   }, [])
+
+  // Get plan details
+  const planDetails = bookingData?.plan ? plans[bookingData.plan as keyof typeof plans] : null
 
   return (
     <div className="container py-12 md:py-24">
@@ -38,9 +90,34 @@ export default function ConfirmationPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Booking Confirmed!</CardTitle>
-              <CardDescription>Your mobile gym session has been successfully scheduled.</CardDescription>
+              <CardDescription>
+                Your mobile gym session has been successfully scheduled.
+                {bookingId && <div className="mt-2 font-medium">Booking ID: {bookingId}</div>}
+              </CardDescription>
             </CardHeader>
             <CardContent className="text-left">
+              {bookingData && (
+                <div className="mb-4 space-y-2">
+                  {planDetails && (
+                    <div>
+                      <p className="font-medium">Plan: {planDetails.name}</p>
+                      <p className="text-sm text-muted-foreground">Price: ₹{planDetails.price.toLocaleString()}</p>
+                    </div>
+                  )}
+                  {bookingData.date && (
+                    <p>
+                      <span className="font-medium">Date & Time:</span> {bookingData.date.toLocaleDateString()} at{" "}
+                      {bookingData.time}
+                    </p>
+                  )}
+                  {bookingData.address && (
+                    <p>
+                      <span className="font-medium">Location:</span> {bookingData.address}
+                    </p>
+                  )}
+                </div>
+              )}
+
               <p className="mb-4">
                 We've sent a confirmation email with all the details to your email address. Our team will contact you
                 shortly to confirm your booking.

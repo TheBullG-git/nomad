@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Dumbbell, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -12,7 +11,13 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const pathname = usePathname()
+  const [pathname, setPathname] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPathname(window.location.pathname)
+    }
+  }, [])
 
   // Handle mounting to prevent hydration mismatch
   useEffect(() => {
