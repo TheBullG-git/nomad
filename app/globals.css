@@ -75,3 +75,29 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+/* Custom styles to ensure proper rendering */
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+.main-content {
+  padding-top: 4rem;
+}
+
+/* Fix for mobile menu */
+@media (max-width: 768px) {
+  .mobile-menu {
+    width: 100%;
+  }
+}
+
+/* Fix for theme toggle */
+.theme-toggle {
+  position: relative;
+  z-index: 20;
+}

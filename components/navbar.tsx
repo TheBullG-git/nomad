@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Dumbbell, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -11,7 +11,13 @@ import { ModeToggle } from "@/components/mode-toggle"
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
+
+  // Handle mounting to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +46,8 @@ export function Navbar() {
     { href: "/contact", label: "Contact" },
   ]
 
+  if (!mounted) return null
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
@@ -48,15 +56,10 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-2"
-          >
+          <div className="flex items-center gap-2">
             <Dumbbell className="h-6 w-6 text-purple-500" />
             <span className="font-bold text-xl md:text-2xl">NomadFitness</span>
-          </motion.div>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
@@ -92,36 +95,38 @@ export function Navbar() {
       </div>
 
       {/* Mobile Navigation */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-          className="md:hidden border-t bg-background"
-        >
-          <div className="container mx-auto px-4 py-4">
-            <nav className="flex flex-col space-y-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    pathname === link.href
-                      ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
-                      : "hover:bg-muted"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Button asChild className="w-full mt-2 bg-purple-600 hover:bg-purple-700">
-                <Link href="/booking">Book Now</Link>
-              </Button>
-            </nav>
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden border-t bg-background"
+          >
+            <div className="container mx-auto px-4 py-4">
+              <nav className="flex flex-col space-y-3">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      pathname === link.href
+                        ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Button asChild className="w-full mt-2 bg-purple-600 hover:bg-purple-700">
+                  <Link href="/booking">Book Now</Link>
+                </Button>
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -14,6 +15,13 @@ const nextConfig = {
   // Add environment variables to be available at build time
   env: {
     NEXT_PHASE: process.env.NEXT_PHASE || '',
+  },
+  // Ensure proper output
+  output: 'standalone',
+  // Experimental features
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true,
   },
 }
 

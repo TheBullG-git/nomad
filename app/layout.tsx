@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "NomadFitness - Mobile Gym Service",
   description: "Professional fitness training that comes to you.",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -20,11 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="light dark" />
+      </head>
+      <body className={`${inter.className} min-h-screen antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
-            <main className="flex-1 pt-16">{children}</main>
+            <div className="flex-1 pt-16">{children}</div>
             <Footer />
           </div>
         </ThemeProvider>

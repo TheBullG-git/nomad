@@ -72,7 +72,7 @@ export interface Database {
           description?: string
           long_description?: string | null
           price?: number | null
-          duration?: number
+          duration?: number | null
           max_participants?: number | null
           is_active?: boolean | null
           created_at?: string

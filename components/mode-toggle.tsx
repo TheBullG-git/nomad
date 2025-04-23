@@ -1,4 +1,6 @@
 "use client"
+
+import { useEffect, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -7,6 +9,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 export function ModeToggle() {
   const { setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // useEffect only runs on the client, so now we can safely show the UI
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0">
+        <Sun className="h-4 w-4" />
+      </Button>
+    )
+  }
 
   return (
     <DropdownMenu>
