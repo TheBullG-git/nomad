@@ -1,4 +1,10 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export interface Database {
   public: {
@@ -361,5 +367,3 @@ export interface Database {
     }
   }
 }
-
-export type PreferenceType = Database["public"]["Enums"]["preference_type"]
