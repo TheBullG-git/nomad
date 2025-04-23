@@ -1,91 +1,11 @@
 "use client"
 
-import { Suspense, useEffect, useRef, useState } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { Environment, Html, OrbitControls, PerspectiveCamera } from "@react-three/drei"
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dumbbell, Headphones, Heart, Play, Pause, Volume2, VolumeX } from "lucide-react"
+import { Dumbbell, Headphones, Heart } from "lucide-react"
 import Image from "next/image"
-
-function Model({ setCurrentSection, currentSection }) {
-  // Using a simple mesh instead of loading a model to avoid compatibility issues
-  const group = useRef()
-
-  useFrame(() => {
-    if (group.current) {
-      group.current.rotation.y += 0.002
-    }
-  })
-
-  return (
-    <group ref={group} position={[0, 0, 0]} scale={2}>
-      {/* Simple box as placeholder */}
-      <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="orange" />
-      </mesh>
-
-      {/* These would be positioned correctly on the actual truck model */}
-      <Html position={[1, 1, 0]} distanceFactor={10}>
-        <div
-          className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer ${
-            currentSection === "weights" ? "bg-purple-600" : "bg-white"
-          }`}
-          onClick={() => setCurrentSection("weights")}
-        >
-          <Dumbbell className={`h-3 w-3 ${currentSection === "weights" ? "text-white" : "text-purple-600"}`} />
-        </div>
-      </Html>
-
-      <Html position={[-1, 1, 0]} distanceFactor={10}>
-        <div
-          className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer ${
-            currentSection === "cardio" ? "bg-purple-600" : "bg-white"
-          }`}
-          onClick={() => setCurrentSection("cardio")}
-        >
-          <Heart className={`h-3 w-3 ${currentSection === "cardio" ? "text-white" : "text-purple-600"}`} />
-        </div>
-      </Html>
-
-      <Html position={[0, 1, 1]} distanceFactor={10}>
-        <div
-          className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer ${
-            currentSection === "recovery" ? "bg-purple-600" : "bg-white"
-          }`}
-          onClick={() => setCurrentSection("recovery")}
-        >
-          <Headphones className={`h-3 w-3 ${currentSection === "recovery" ? "text-white" : "text-purple-600"}`} />
-        </div>
-      </Html>
-    </group>
-  )
-}
-
-function TruckScene({ setCurrentSection, currentSection }) {
-  return (
-    <Canvas>
-      <PerspectiveCamera makeDefault position={[0, 1, 5]} />
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-      <pointLight position={[-10, -10, -10]} />
-      <Suspense fallback={null}>
-        <Model setCurrentSection={setCurrentSection} currentSection={currentSection} />
-        <Environment preset="city" />
-      </Suspense>
-      <OrbitControls
-        enablePan={false}
-        minPolarAngle={Math.PI / 4}
-        maxPolarAngle={Math.PI / 2}
-        minDistance={3}
-        maxDistance={8}
-      />
-    </Canvas>
-  )
-}
 
 const sections = {
   weights: {
@@ -99,6 +19,7 @@ const sections = {
       "TRX suspension system",
       "Resistance bands of varying strengths",
     ],
+    icon: Dumbbell,
   },
   cardio: {
     title: "Cardio Zone",
@@ -110,6 +31,7 @@ const sections = {
       "Jump ropes and agility ladders",
       "Step platforms for aerobic exercises",
     ],
+    icon: Heart,
   },
   recovery: {
     title: "Recovery Corner",
@@ -121,38 +43,13 @@ const sections = {
       "Ice/heat packs for immediate treatment",
       "Relaxation space with guided recovery sessions",
     ],
+    icon: Headphones,
   },
 }
 
 export default function TruckTourPage() {
   const [currentSection, setCurrentSection] = useState("weights")
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const audioRef = useRef(null)
-
-  useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.play().catch((e) => console.log("Audio play error:", e))
-      } else {
-        audioRef.current.pause()
-      }
-    }
-  }, [isPlaying])
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.muted = isMuted
-    }
-  }, [isMuted])
-
-  const handleAudioToggle = () => {
-    setIsPlaying(!isPlaying)
-  }
-
-  const handleMuteToggle = () => {
-    setIsMuted(!isMuted)
-  }
+  const CurrentIcon = sections[currentSection].icon
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -165,47 +62,70 @@ export default function TruckTourPage() {
         >
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">Interactive Truck Tour</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore our state-of-the-art mobile gym truck. Click on the hotspots to learn more about each section.
+            Explore our state-of-the-art mobile gym truck. Click on the sections below to learn more.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 bg-muted rounded-lg overflow-hidden h-[500px] relative">
-            <TruckScene setCurrentSection={setCurrentSection} currentSection={currentSection} />
+            {/* Replace 3D scene with a static image */}
+            <div className="relative w-full h-full">
+              <Image src="/mobile-fitness-unit.png" alt="Mobile Fitness Unit" fill className="object-cover" priority />
 
-            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="bg-white/80 backdrop-blur-sm hover:bg-white/90"
-                  onClick={handleAudioToggle}
-                >
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="bg-white/80 backdrop-blur-sm hover:bg-white/90"
-                  onClick={handleMuteToggle}
-                >
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                </Button>
+              {/* Interactive hotspots */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-3/4 h-3/4">
+                  {/* Weights hotspot */}
+                  <button
+                    className={`absolute top-1/4 left-1/4 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                      currentSection === "weights" ? "bg-purple-600 scale-110" : "bg-white/80"
+                    }`}
+                    onClick={() => setCurrentSection("weights")}
+                  >
+                    <Dumbbell
+                      className={`h-6 w-6 ${currentSection === "weights" ? "text-white" : "text-purple-600"}`}
+                    />
+                  </button>
+
+                  {/* Cardio hotspot */}
+                  <button
+                    className={`absolute top-1/3 right-1/4 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                      currentSection === "cardio" ? "bg-purple-600 scale-110" : "bg-white/80"
+                    }`}
+                    onClick={() => setCurrentSection("cardio")}
+                  >
+                    <Heart className={`h-6 w-6 ${currentSection === "cardio" ? "text-white" : "text-purple-600"}`} />
+                  </button>
+
+                  {/* Recovery hotspot */}
+                  <button
+                    className={`absolute bottom-1/4 left-1/3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                      currentSection === "recovery" ? "bg-purple-600 scale-110" : "bg-white/80"
+                    }`}
+                    onClick={() => setCurrentSection("recovery")}
+                  >
+                    <Headphones
+                      className={`h-6 w-6 ${currentSection === "recovery" ? "text-white" : "text-purple-600"}`}
+                    />
+                  </button>
+                </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm px-3 py-1 rounded-md text-sm">
-                <p>Click and drag to rotate | Scroll to zoom</p>
+
+              <div className="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-md text-sm text-center">
+                <p>Click on the hotspots to explore different areas of our mobile gym</p>
               </div>
             </div>
-
-            <audio ref={audioRef} loop className="hidden">
-              <source src="/placeholder.mp3" type="audio/mpeg" />
-            </audio>
           </div>
 
           <div>
             <Card className="h-full">
               <CardHeader>
-                <CardTitle>{sections[currentSection].title}</CardTitle>
+                <div className="flex items-center gap-2">
+                  <div className="bg-purple-600 p-2 rounded-lg">
+                    <CurrentIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <CardTitle>{sections[currentSection].title}</CardTitle>
+                </div>
                 <CardDescription>{sections[currentSection].description}</CardDescription>
               </CardHeader>
               <CardContent>
