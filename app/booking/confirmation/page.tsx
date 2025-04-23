@@ -6,22 +6,17 @@ import { motion } from "framer-motion"
 import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useRouter } from "next/navigation"
 
 export default function ConfirmationPage() {
-  const router = useRouter()
-
-  // In a real implementation, we would fetch the booking details from Supabase
-  // For now, we'll just simulate a successful booking
-
   useEffect(() => {
-    // If the user navigates directly to this page without completing the booking form,
-    // redirect them to the booking page
+    // Check if booking data exists in session storage
     const hasBookingData = sessionStorage.getItem("bookingData")
     if (!hasBookingData) {
-      router.push("/booking")
+      // If no booking data, we'll still show the confirmation page
+      // but we won't have specific details to display
+      console.log("No booking data found in session storage")
     }
-  }, [router])
+  }, [])
 
   return (
     <div className="container py-12 md:py-24">
@@ -70,9 +65,6 @@ export default function ConfirmationPage() {
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
               <Button asChild className="w-full bg-purple-600 hover:bg-purple-700">
-                <Link href="/dashboard">Go to Dashboard</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full">
                 <Link href="/">Return to Home</Link>
               </Button>
             </CardFooter>

@@ -17,8 +17,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/client"
-import { useAuth } from "@/components/auth/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { LocationBadge } from "@/components/location-badge"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -49,9 +47,7 @@ const timeSlots = [
 
 export default function BookingPage() {
   const router = useRouter()
-  const { user } = useAuth()
   const { toast } = useToast()
-  const supabase = createClient()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     date: undefined as Date | undefined,
@@ -90,61 +86,22 @@ export default function BookingPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    if (!user) {
-      // Store booking data in session storage and redirect to sign in
-      sessionStorage.setItem("pendingBooking", JSON.stringify(formData))
-      router.push("/auth/sign-in?redirect=/booking")
-      return
-    }
-
     try {
-      // Get service details
-      const { data: serviceData } = await supabase
-        .from("services")
-        .select("id")
-        .eq("name", mobileGymService.title)
-        .single()
+      // Store booking data in session storage for confirmation page
+      sessionStorage.setItem("bookingData", JSON.stringify(formData))
 
-      // Calculate end time (add duration to start time)
-      const startTime = formData.time
-      const durationMinutes = 60 // 60 min for mobile gym session
-      const startHour = Number.parseInt(startTime.split(":")[0])
-      const startMinute = Number.parseInt(startTime.split(":")[1].split(" ")[0])
-      const isPM = startTime.includes("PM") && startHour !== 12
-      const is12AM = startTime.includes("AM") && startHour === 12
+      // Submit the booking data to your API
+      const response = await fetch("/api/submit-booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
 
-      const startHour24 = is12AM ? 0 : isPM ? startHour + 12 : startHour
-
-      let endHour = startHour24
-      let endMinute = startMinute + Number.parseInt(durationMinutes)
-
-      if (endMinute >= 60) {
-        endHour += Math.floor(endMinute / 60)
-        endMinute = endMinute % 60
+      if (!response.ok) {
+        throw new Error("Failed to submit booking")
       }
-
-      endHour = endHour % 24
-
-      const endTime = `${endHour.toString().padStart(2, "0")}:${endMinute.toString().padStart(2, "0")}`
-
-      // Create booking in database
-      const { data: bookingData, error } = await supabase
-        .from("bookings")
-        .insert({
-          user_id: user.id,
-          service_id: serviceData?.id,
-          booking_date: formData.date?.toISOString().split("T")[0],
-          start_time: startTime,
-          end_time: endTime,
-          status: "pending",
-          participants: 1, // Always 1 for mobile gym session
-          location: formData.address,
-          notes: formData.notes,
-        })
-        .select("id")
-        .single()
-
-      if (error) throw error
 
       // Navigate to confirmation page
       toast({
@@ -267,11 +224,10 @@ export default function BookingPage() {
                           onSelect={(date) => updateFormData("date", date)}
                           initialFocus
                           disabled={(date) => {
-                            // Only allow booking for today or tomorrow
+                            // Only allow booking for today or future dates
                             const today = new Date()
-                            const tomorrow = new Date()
-                            tomorrow.setDate(tomorrow.getDate() + 1)
-                            return date < today || (date > tomorrow && true)
+                            today.setHours(0, 0, 0, 0)
+                            return date < today
                           }}
                         />
                       </PopoverContent>
