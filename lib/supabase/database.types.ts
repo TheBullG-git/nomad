@@ -12,7 +12,7 @@ export interface Database {
           address: string | null
           created_at: string
           updated_at: string
-          role: string
+          role: string | null
         }
         Insert: {
           id: string
@@ -20,9 +20,9 @@ export interface Database {
           last_name?: string | null
           phone?: string | null
           address?: string | null
-          created_at?: string
-          updated_at?: string
-          role?: string
+          created_at: string
+          updated_at: string
+          role?: string | null
         }
         Update: {
           id?: string
@@ -32,7 +32,7 @@ export interface Database {
           address?: string | null
           created_at?: string
           updated_at?: string
-          role?: string
+          role?: string | null
         }
       }
       services: {
@@ -43,8 +43,8 @@ export interface Database {
           long_description: string | null
           price: number | null
           duration: number
-          max_participants: number
-          is_active: boolean
+          max_participants: number | null
+          is_active: boolean | null
           created_at: string
           updated_at: string
         }
@@ -55,10 +55,10 @@ export interface Database {
           long_description?: string | null
           price?: number | null
           duration: number
-          max_participants?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
+          max_participants?: number | null
+          is_active?: boolean | null
+          created_at: string
+          updated_at: string
         }
         Update: {
           id?: string
@@ -67,8 +67,72 @@ export interface Database {
           long_description?: string | null
           price?: number | null
           duration?: number
-          max_participants?: number
-          is_active?: boolean
+          max_participants?: number | null
+          is_active?: boolean | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      orders: {
+        Row: {
+          id: string
+          user_id: string
+          total_amount: number
+          payment_method: string
+          payment_status: string
+          order_status: string
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          total_amount: number
+          payment_method?: string
+          payment_status?: string
+          order_status?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          total_amount?: number
+          payment_method?: string
+          payment_status?: string
+          order_status?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          service_id: string
+          quantity: number
+          price: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          service_id: string
+          quantity?: number
+          price: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          service_id?: string
+          quantity?: number
+          price?: number
           created_at?: string
           updated_at?: string
         }
@@ -82,9 +146,9 @@ export interface Database {
           booking_date: string
           start_time: string
           end_time: string
-          status: string
-          participants: number
-          location: string
+          status: string | null
+          participants: number | null
+          location: string | null
           notes: string | null
           created_at: string
           updated_at: string
@@ -97,12 +161,12 @@ export interface Database {
           booking_date: string
           start_time: string
           end_time: string
-          status?: string
-          participants?: number
-          location: string
+          status?: string | null
+          participants?: number | null
+          location?: string | null
           notes?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at: string
+          updated_at: string
         }
         Update: {
           id?: string
@@ -112,9 +176,9 @@ export interface Database {
           booking_date?: string
           start_time?: string
           end_time?: string
-          status?: string
-          participants?: number
-          location?: string
+          status?: string | null
+          participants?: number | null
+          location?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string
@@ -142,8 +206,8 @@ export interface Database {
           muscle_mass?: number | null
           resting_heart_rate?: number | null
           notes?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at: string
+          updated_at: string
         }
         Update: {
           id?: string
@@ -163,8 +227,8 @@ export interface Database {
           id: string
           user_id: string | null
           content: string
-          rating: number
-          is_approved: boolean
+          rating: number | null
+          is_approved: boolean | null
           created_at: string
           updated_at: string
         }
@@ -172,17 +236,17 @@ export interface Database {
           id?: string
           user_id?: string | null
           content: string
-          rating: number
-          is_approved?: boolean
-          created_at?: string
-          updated_at?: string
+          rating?: number | null
+          is_approved?: boolean | null
+          created_at: string
+          updated_at: string
         }
         Update: {
           id?: string
           user_id?: string | null
           content?: string
-          rating?: number
-          is_approved?: boolean
+          rating?: number | null
+          is_approved?: boolean | null
           created_at?: string
           updated_at?: string
         }
@@ -205,8 +269,8 @@ export interface Database {
           trainer_notes?: string | null
           user_feedback?: string | null
           session_rating?: number | null
-          created_at?: string
-          updated_at?: string
+          created_at: string
+          updated_at: string
         }
         Update: {
           id?: string
@@ -224,7 +288,7 @@ export interface Database {
           id: string
           truck_name: string
           license_plate: string
-          status: string
+          status: string | null
           last_maintenance_date: string | null
           next_maintenance_date: string | null
           created_at: string
@@ -234,17 +298,17 @@ export interface Database {
           id?: string
           truck_name: string
           license_plate: string
-          status?: string
+          status?: string | null
           last_maintenance_date?: string | null
           next_maintenance_date?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at: string
+          updated_at: string
         }
         Update: {
           id?: string
           truck_name?: string
           license_plate?: string
-          status?: string
+          status?: string | null
           last_maintenance_date?: string | null
           next_maintenance_date?: string | null
           created_at?: string
@@ -268,6 +332,23 @@ export interface Database {
           assigned_at?: string
         }
       }
+      subscription_preferences: {
+        Row: {
+          booking_id: string
+          preference_type: "consistent" | "flexible"
+          preferred_time: string | null
+        }
+        Insert: {
+          booking_id: string
+          preference_type: "consistent" | "flexible"
+          preferred_time?: string | null
+        }
+        Update: {
+          booking_id?: string
+          preference_type?: "consistent" | "flexible"
+          preferred_time?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -276,7 +357,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      preference_type: ["consistent", "flexible"]
     }
   }
 }

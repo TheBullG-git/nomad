@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Cleaning node_modules..."
+echo "Cleaning project..."
 rm -rf node_modules
 rm -rf .next
 
