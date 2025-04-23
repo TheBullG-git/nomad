@@ -213,7 +213,7 @@ export default function MobileGymServicePage() {
               <TabsTrigger value="recovery">Recovery</TabsTrigger>
             </TabsList>
             {equipmentList.map((category) => (
-              <TabsContent key={category.category.toLowerCase()} value={category.category.toLowerCase().split(" ")[0]}>
+              <TabsContent key={category.category.toLowerCase().split(" ")[0]} value={category.category.toLowerCase().split(" ")[0]}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <h3 className="text-xl font-semibold mb-4">{category.category} Equipment</h3>
@@ -239,7 +239,7 @@ export default function MobileGymServicePage() {
                           ? "/modern-gym-floor.png"
                           : category.category === "Cardio"
                             ? "/modern-gym-cardio.png"
-                            : "/placeholder.svg?height=300&width=500&query=gym recovery equipment"
+                            : "/gym-recovery-zone.png"
                       }
                       alt={`${category.category} Equipment`}
                       width={500}
@@ -293,83 +293,4 @@ export default function MobileGymServicePage() {
                   <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                   <p className="text-muted-foreground">{item.description}</p>
                 </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="py-12 md:py-16 bg-muted">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Frequently Asked Questions</h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Find answers to common questions about our mobile gym service.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {faqs.map((faq, index) => (
-              <Card key={index}>
-                <CardContent className="pt-6">
-                  <h3 className="font-semibold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 md:py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/90 to-blue-900/90 z-10" />
-        <Image
-          src="/diverse-group-workout.png"
-          alt="Fitness background"
-          width={1600}
-          height={600}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="container relative z-20">
-          <div className="max-w-3xl mx-auto text-center text-white">
-            <motion.h2
-              className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              Ready to Get Started?
-            </motion.h2>
-            <motion.p
-              className="mt-6 text-lg text-gray-200"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              Book your first mobile gym session today and experience the convenience of fitness that comes to you in
-              Rajkot.
-            </motion.p>
-            <motion.div
-              className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <Button asChild size="lg" className="bg-white text-purple-900 hover:bg-gray-100">
-                <Link href="/booking">Book a Session</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-                <Link href="/contact">Contact Us</Link>
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
-}
+              </Card>\
