@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Environment, Html, OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei"
+import { Environment, Html, OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,12 +11,8 @@ import { Dumbbell, Headphones, Heart, Play, Pause, Volume2, VolumeX } from "luci
 import Image from "next/image"
 
 function Model({ setCurrentSection, currentSection }) {
-  const { scene } = useGLTF("/assets/3d/duck.glb")
+  // Using a simple mesh instead of loading a model to avoid compatibility issues
   const group = useRef()
-
-  // This is a placeholder for the actual gym truck model
-  // In a real implementation, you would use a proper 3D model of the truck
-  // and set up proper hotspots for each section
 
   useFrame(() => {
     if (group.current) {
@@ -26,7 +22,11 @@ function Model({ setCurrentSection, currentSection }) {
 
   return (
     <group ref={group} position={[0, 0, 0]} scale={2}>
-      <primitive object={scene} />
+      {/* Simple box as placeholder */}
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="orange" />
+      </mesh>
 
       {/* These would be positioned correctly on the actual truck model */}
       <Html position={[1, 1, 0]} distanceFactor={10}>
@@ -133,7 +133,7 @@ export default function TruckTourPage() {
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
-        audioRef.current.play()
+        audioRef.current.play().catch((e) => console.log("Audio play error:", e))
       } else {
         audioRef.current.pause()
       }
@@ -197,7 +197,9 @@ export default function TruckTourPage() {
               </div>
             </div>
 
-            <audio ref={audioRef} src="/placeholder.mp3" loop className="hidden" />
+            <audio ref={audioRef} loop className="hidden">
+              <source src="/placeholder.mp3" type="audio/mpeg" />
+            </audio>
           </div>
 
           <div>
