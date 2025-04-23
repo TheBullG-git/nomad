@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex flex-col gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <Dumbbell className="h-6 w-6 text-purple-600" />
+              <Dumbbell className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               <span className="text-xl font-bold">NomadFitness</span>
             </Link>
             <p className="text-sm text-muted-foreground">

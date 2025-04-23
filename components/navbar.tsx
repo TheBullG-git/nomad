@@ -4,16 +4,14 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { Dumbbell, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { useAuth } from "@/components/auth/auth-context"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
-  const { user, signOut } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,9 +52,10 @@ export function Navbar() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="font-bold text-xl md:text-2xl"
+            className="flex items-center gap-2"
           >
-            NomadFitness
+            <Dumbbell className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            <span className="font-bold text-xl md:text-2xl">NomadFitness</span>
           </motion.div>
         </Link>
 
@@ -79,25 +78,9 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center space-x-4">
           <ModeToggle />
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/dashboard">Dashboard</Link>
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => signOut()}>
-                Sign Out
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-4">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/auth/sign-in">Sign In</Link>
-              </Button>
-              <Button asChild size="sm" className="bg-purple-600 hover:bg-purple-700">
-                <Link href="/auth/sign-up">Sign Up</Link>
-              </Button>
-            </div>
-          )}
+          <Button asChild className="bg-purple-600 hover:bg-purple-700">
+            <Link href="/booking">Book Now</Link>
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -133,31 +116,9 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              {user ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
-                  >
-                    Dashboard
-                  </Link>
-                  <Button variant="outline" className="justify-start" onClick={() => signOut()}>
-                    Sign Out
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/auth/sign-in"
-                    className="px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
-                  >
-                    Sign In
-                  </Link>
-                  <Button asChild className="bg-purple-600 hover:bg-purple-700">
-                    <Link href="/auth/sign-up">Sign Up</Link>
-                  </Button>
-                </>
-              )}
+              <Button asChild className="mt-2 bg-purple-600 hover:bg-purple-700">
+                <Link href="/booking">Book Now</Link>
+              </Button>
             </nav>
           </div>
         </motion.div>
