@@ -5,8 +5,8 @@ import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dumbbell, Headphones, Heart } from "lucide-react"
-import Image from "next/image"
 
+// Define section data
 const sections = {
   weights: {
     title: "Weights Area",
@@ -49,6 +49,8 @@ const sections = {
 
 export default function TruckTourPage() {
   const [currentSection, setCurrentSection] = useState("weights")
+
+  // Get the current section's icon component
   const CurrentIcon = sections[currentSection].icon
 
   return (
@@ -68,12 +70,17 @@ export default function TruckTourPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 bg-muted rounded-lg overflow-hidden h-[500px] relative">
-            {/* Replace 3D scene with a static image */}
+            {/* Static image with interactive hotspots */}
             <div className="relative w-full h-full">
-              <Image src="/mobile-fitness-unit.png" alt="Mobile Fitness Unit" fill className="object-cover" priority />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-blue-900/20 z-10"></div>
+
+              {/* Placeholder image - replace with your actual truck image */}
+              <div className="w-full h-full bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 flex items-center justify-center">
+                <p className="text-lg text-center px-4">Mobile Gym Truck Interior</p>
+              </div>
 
               {/* Interactive hotspots */}
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center z-20">
                 <div className="relative w-3/4 h-3/4">
                   {/* Weights hotspot */}
                   <button
@@ -111,7 +118,7 @@ export default function TruckTourPage() {
                 </div>
               </div>
 
-              <div className="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-md text-sm text-center">
+              <div className="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-md text-sm text-center z-20">
                 <p>Click on the hotspots to explore different areas of our mobile gym</p>
               </div>
             </div>
@@ -170,14 +177,8 @@ export default function TruckTourPage() {
                     prevent injury.
                   </p>
                 </div>
-                <div className="rounded-lg overflow-hidden">
-                  <Image
-                    src="/modern-gym-floor.png"
-                    alt="Weights Area"
-                    width={500}
-                    height={300}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="rounded-lg overflow-hidden bg-muted h-[200px] flex items-center justify-center">
+                  <p className="text-muted-foreground">Weights Area Image</p>
                 </div>
               </div>
             </TabsContent>
@@ -195,14 +196,8 @@ export default function TruckTourPage() {
                     fitness apps for seamless progress tracking.
                   </p>
                 </div>
-                <div className="rounded-lg overflow-hidden">
-                  <Image
-                    src="/modern-gym-cardio.png"
-                    alt="Cardio Zone"
-                    width={500}
-                    height={300}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="rounded-lg overflow-hidden bg-muted h-[200px] flex items-center justify-center">
+                  <p className="text-muted-foreground">Cardio Zone Image</p>
                 </div>
               </div>
             </TabsContent>
@@ -219,14 +214,8 @@ export default function TruckTourPage() {
                     recovery equipment for maximum benefit.
                   </p>
                 </div>
-                <div className="rounded-lg overflow-hidden">
-                  <Image
-                    src="/gym-recovery-zone.png"
-                    alt="Recovery Corner"
-                    width={500}
-                    height={300}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="rounded-lg overflow-hidden bg-muted h-[200px] flex items-center justify-center">
+                  <p className="text-muted-foreground">Recovery Corner Image</p>
                 </div>
               </div>
             </TabsContent>
