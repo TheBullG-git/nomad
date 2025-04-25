@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Remove swcMinify as it's no longer recognized in Next.js 15
-  // swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -13,15 +11,11 @@ const nextConfig = {
     domains: ['v0.blob.com'],
     unoptimized: true,
   },
-  // Add environment variables to be available at build time
-  env: {
-    NEXT_PHASE: process.env.NEXT_PHASE || '',
-  },
   // Ensure proper output
   output: 'standalone',
-  // Update experimental features - remove optimizeCss
+  // Experimental features
   experimental: {
-    // optimizeCss: true, // Remove this line
+    // Removed optimizeCss to avoid critters dependency issues
     scrollRestoration: true,
   },
 }

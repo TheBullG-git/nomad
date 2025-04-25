@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface Database {
   public: {
@@ -72,7 +66,7 @@ export interface Database {
           description?: string
           long_description?: string | null
           price?: number | null
-          duration?: number | null
+          duration?: number
           max_participants?: number | null
           is_active?: boolean | null
           created_at?: string
@@ -128,10 +122,10 @@ export interface Database {
           id?: string
           order_id: string
           service_id: string
-          quantity: number
+          quantity?: number
           price: number
-          created_at: string
-          updated_at: string
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
@@ -161,33 +155,33 @@ export interface Database {
         }
         Insert: {
           id?: string
-          user_id: string | null
-          service_id: string | null
-          trainer_id: string | null
+          user_id?: string | null
+          service_id?: string | null
+          trainer_id?: string | null
           booking_date: string
           start_time: string
           end_time: string
-          status: string | null
-          participants: number | null
-          location: string | null
-          notes: string | null
+          status?: string | null
+          participants?: number | null
+          location?: string | null
+          notes?: string | null
           created_at: string
           updated_at: string
         }
         Update: {
           id?: string
-          user_id: string | null
-          service_id: string | null
-          trainer_id: string | null
-          booking_date: string
-          start_time: string
-          end_time: string
-          status: string | null
-          participants: number | null
-          location: string | null
-          notes: string | null
-          created_at: string
-          updated_at: string
+          user_id?: string | null
+          service_id?: string | null
+          trainer_id?: string | null
+          booking_date?: string
+          start_time?: string
+          end_time?: string
+          status?: string | null
+          participants?: number | null
+          location?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
       fitness_stats: {
@@ -207,25 +201,25 @@ export interface Database {
           id?: string
           user_id: string
           date: string
-          weight: number | null
-          body_fat_percentage: number | null
-          muscle_mass: number | null
-          resting_heart_rate: number | null
-          notes: string | null
+          weight?: number | null
+          body_fat_percentage?: number | null
+          muscle_mass?: number | null
+          resting_heart_rate?: number | null
+          notes?: string | null
           created_at: string
           updated_at: string
         }
         Update: {
           id?: string
-          user_id: string
-          date: string
-          weight: number | null
-          body_fat_percentage: number | null
-          muscle_mass: number | null
-          resting_heart_rate: number | null
-          notes: string | null
-          created_at: string
-          updated_at: string
+          user_id?: string
+          date?: string
+          weight?: number | null
+          body_fat_percentage?: number | null
+          muscle_mass?: number | null
+          resting_heart_rate?: number | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
       testimonials: {
@@ -240,21 +234,21 @@ export interface Database {
         }
         Insert: {
           id?: string
-          user_id: string | null
+          user_id?: string | null
           content: string
-          rating: number | null
-          is_approved: boolean | null
+          rating?: number | null
+          is_approved?: boolean | null
           created_at: string
           updated_at: string
         }
         Update: {
           id?: string
-          user_id: string | null
-          content: string
-          rating: number | null
-          is_approved: boolean | null
-          created_at: string
-          updated_at: string
+          user_id?: string | null
+          content?: string
+          rating?: number | null
+          is_approved?: boolean | null
+          created_at?: string
+          updated_at?: string
         }
       }
       workout_sessions: {
@@ -272,21 +266,21 @@ export interface Database {
           id?: string
           booking_id: string
           user_id: string
-          trainer_notes: string | null
-          user_feedback: string | null
-          session_rating: number | null
+          trainer_notes?: string | null
+          user_feedback?: string | null
+          session_rating?: number | null
           created_at: string
           updated_at: string
         }
         Update: {
           id?: string
-          booking_id: string
-          user_id: string
-          trainer_notes: string | null
-          user_feedback: string | null
-          session_rating: number | null
-          created_at: string
-          updated_at: string
+          booking_id?: string
+          user_id?: string
+          trainer_notes?: string | null
+          user_feedback?: string | null
+          session_rating?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
       truck_fleet: {
@@ -304,21 +298,21 @@ export interface Database {
           id?: string
           truck_name: string
           license_plate: string
-          status: string | null
-          last_maintenance_date: string | null
-          next_maintenance_date: string | null
+          status?: string | null
+          last_maintenance_date?: string | null
+          next_maintenance_date?: string | null
           created_at: string
           updated_at: string
         }
         Update: {
           id?: string
-          truck_name: string
-          license_plate: string
-          status: string | null
-          last_maintenance_date: string | null
-          next_maintenance_date: string | null
-          created_at: string
-          updated_at: string
+          truck_name?: string
+          license_plate?: string
+          status?: string | null
+          last_maintenance_date?: string | null
+          next_maintenance_date?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
       booking_truck_assignments: {
@@ -330,12 +324,12 @@ export interface Database {
         Insert: {
           booking_id: string
           truck_id: string
-          assigned_at: string
+          assigned_at?: string
         }
         Update: {
-          booking_id: string
-          truck_id: string
-          assigned_at: string
+          booking_id?: string
+          truck_id?: string
+          assigned_at?: string
         }
       }
       subscription_preferences: {
@@ -347,12 +341,12 @@ export interface Database {
         Insert: {
           booking_id: string
           preference_type: "consistent" | "flexible"
-          preferred_time: string | null
+          preferred_time?: string | null
         }
         Update: {
-          booking_id: string
-          preference_type: "consistent" | "flexible"
-          preferred_time: string | null
+          booking_id?: string
+          preference_type?: "consistent" | "flexible"
+          preferred_time?: string | null
         }
       }
     }

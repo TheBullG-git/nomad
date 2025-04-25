@@ -3,59 +3,33 @@ import { NextResponse } from "next/server"
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, email, phone, address, date, time, notes, plan } = body
 
     // Validate required fields
-    if (!name || !email || !phone || !address || !date || !time || !plan) {
+    const { service, plan, name, email, phone, date, time, location } = body
+
+    if (!service || !plan || !name || !email || !phone || !date || !time || !location) {
       return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 })
     }
 
-    // Generate booking ID
-    const bookingId = `BKG-${Date.now().toString().slice(-6)}`
+    // Generate a booking ID
+    const bookingId = `BK-${Date.now().toString().slice(-6)}`
 
-    // Format date for storage
-    const bookingDate = new Date(date).toISOString().split("T")[0]
-
-    // Get plan details
-    let planName = ""
-    let planPrice = 0
-
-    switch (plan) {
-      case "single-session":
-        planName = "Single Session"
-        planPrice = 300
-        break
-      case "monthly":
-        planName = "Monthly Plan"
-        planPrice = 7000
-        break
-      case "quarterly":
-        planName = "Quarterly Plan"
-        planPrice = 15000
-        break
-      case "yearly":
-        planName = "Yearly Plan"
-        planPrice = 25000
-        break
-      default:
-        planName = "Unknown Plan"
-        planPrice = 0
-    }
-
-    // Log booking to console
+    // In a production environment, you would save this data to your database
+    // For now, we'll just log it and return a success response
     console.log("Booking received:", {
       bookingId,
-      date: bookingDate,
-      time,
+      service,
+      plan,
       name,
       email,
       phone,
-      address,
-      plan: planName,
-      price: planPrice,
-      notes: notes || "N/A",
+      date,
+      time,
+      location,
+      message: body.message || "",
     })
 
+    // Return success response with booking ID
     return NextResponse.json({
       success: true,
       message: "Booking submitted successfully",

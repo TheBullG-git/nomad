@@ -35,7 +35,33 @@ export async function logOrder(order: OrderData): Promise<{ success: boolean }> 
 
 // Simple function to get orders (stub)
 export async function getOrders() {
-  return { success: true, orders: [] }
+  return {
+    success: true,
+    orders: [
+      {
+        id: "ORD-123456",
+        customerName: "Raj Patel",
+        customerEmail: "raj.patel@example.com",
+        customerPhone: "+91 98765 43210",
+        serviceName: "Mobile Gym Session",
+        quantity: 1,
+        totalAmount: 300,
+        createdAt: new Date().toISOString(),
+        status: "Completed",
+      },
+      {
+        id: "ORD-123457",
+        customerName: "Priya Sharma",
+        customerEmail: "priya.sharma@example.com",
+        customerPhone: "+91 98765 43211",
+        serviceName: "Monthly Plan",
+        quantity: 1,
+        totalAmount: 7000,
+        createdAt: new Date().toISOString(),
+        status: "New",
+      },
+    ],
+  }
 }
 
 // Simple function to update order status (stub)
