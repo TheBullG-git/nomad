@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 type SoundType =
   | "click"
@@ -12,28 +12,9 @@ type SoundType =
   | "celebration"
   | "booking-confirmed"
 
-const soundFiles = {
-  click: "/sounds/click.mp3",
-  success: "/sounds/success.mp3",
-  error: "/sounds/error.mp3",
-  navigation: "/sounds/navigation.mp3",
-  selection: "/sounds/selection.mp3",
-  submit: "/sounds/submit.mp3",
-  celebration: "/sounds/celebration.mp3",
-  "booking-confirmed": "/sounds/booking-confirmed.mp3",
-}
-
 export function useSoundEffects() {
-  const [muted, setMuted] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      const savedMute = localStorage.getItem("nomadfit-sounds-muted")
-      return savedMute === "true"
-    }
-    return false
-  })
-
-  // Use refs to store audio elements to prevent re-creation on each render
-  const soundsRef = useRef<Record<SoundType, HTMLAudioElement | null>>({
+  const [muted, setMuted] = useState(false)
+  const audioRefs = useRef<Record<SoundType, HTMLAudioElement | null>>({
     click: null,
     success: null,
     error: null,
@@ -44,77 +25,72 @@ export function useSoundEffects() {
     "booking-confirmed": null,
   })
 
-  // Flag to track if sounds are loaded
-  const [soundsLoaded, setSoundsLoaded] = useState(false)
-
+  // Initialize audio elements
   useEffect(() => {
-    // Only load sounds on client side
-    if (typeof window === "undefined") return
+    // Create audio elements for each sound type
+    const sounds: SoundType[] = [
+      "click",
+      "success",
+      "error",
+      "navigation",
+      "selection",
+      "submit",
+      "celebration",
+      "booking-confirmed",
+    ]
 
-    // Create audio elements
-    const audioElements: Record<SoundType, HTMLAudioElement> = {
-      click: new Audio(soundFiles.click),
-      success: new Audio(soundFiles.success),
-      error: new Audio(soundFiles.error),
-      navigation: new Audio(soundFiles.navigation),
-      selection: new Audio(soundFiles.selection),
-      submit: new Audio(soundFiles.submit),
-      celebration: new Audio(soundFiles.celebration),
-      "booking-confirmed": new Audio(soundFiles["booking-confirmed"]),
-    }
-
-    // Set volume for all sounds
-    Object.values(audioElements).forEach((audio) => {
-      audio.volume = 0.3 // Set to a subtle volume level
+    sounds.forEach((sound) => {
+      const audio = new Audio(`/sounds/${sound}.mp3`)
       audio.preload = "auto"
+      audioRefs.current[sound] = audio
     })
 
-    // Store audio elements in ref
-    soundsRef.current = audioElements
+    // Check if user has previously set mute preference
+    const muteSetting = localStorage.getItem("sound-muted")
+    if (muteSetting === "true") {
+      setMuted(true)
+    }
 
-    // Mark sounds as loaded
-    setSoundsLoaded(true)
-
-    // Cleanup
     return () => {
-      Object.values(audioElements).forEach((audio) => {
-        audio.pause()
-        audio.src = ""
+      // Cleanup audio elements
+      Object.values(audioRefs.current).forEach((audio) => {
+        if (audio) {
+          audio.pause()
+          audio.src = ""
+        }
       })
     }
   }, [])
 
-  // Save mute preference to localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("nomadfit-sounds-muted", muted.toString())
-    }
-  }, [muted])
-
   const playSound = useCallback(
     (type: SoundType) => {
-      if (muted || !soundsLoaded) return
+      if (muted) return
 
-      // Get the sound from ref
-      const sound = soundsRef.current[type]
+      try {
+        // Create a new audio instance each time to allow overlapping sounds
+        const audio = new Audio(`/sounds/${type}.mp3`)
+        audio.volume = 0.5 // Set volume to 50%
 
-      if (sound) {
-        // Create a new instance for each play to allow overlapping sounds
-        const soundInstance = new Audio(sound.src)
-        soundInstance.volume = sound.volume
+        const playPromise = audio.play()
 
-        // Play the sound
-        soundInstance.play().catch((err) => {
-          // Handle autoplay restrictions gracefully
-          console.log("Sound playback prevented:", err)
-        })
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.error("Error playing sound:", error)
+          })
+        }
+      } catch (error) {
+        console.error("Failed to play sound:", error)
       }
     },
-    [muted, soundsLoaded],
+    [muted],
   )
 
   const toggleMute = useCallback(() => {
-    setMuted((prev) => !prev)
+    setMuted((prev) => {
+      const newMuted = !prev
+      localStorage.setItem("sound-muted", String(newMuted))
+      return newMuted
+    })
   }, [])
 
   return { playSound, muted, toggleMute }

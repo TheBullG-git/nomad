@@ -1,102 +1,63 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { CheckCircle } from "lucide-react"
+import { motion } from "framer-motion"
+import { Calendar, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useSoundEffects } from "@/hooks/use-sound-effects"
-import { SoundToggle } from "@/components/sound-toggle"
 
 export default function BookingConfirmationPage() {
-  const searchParams = useSearchParams()
+  const [soundPlayed, setSoundPlayed] = useState(false)
   const { playSound } = useSoundEffects()
 
-  const [bookingId, setBookingId] = useState<string | null>(null)
-
   useEffect(() => {
-    // Play booking confirmed sound when the component mounts
-    const playSounds = async () => {
-      try {
-        // Play the new booking confirmed sound
-        playSound("booking-confirmed")
-      } catch (error) {
-        console.error("Error playing sounds:", error)
-      }
+    if (!soundPlayed) {
+      // Play the booking confirmed sound
+      playSound("booking-confirmed")
+      setSoundPlayed(true)
     }
-
-    playSounds()
-
-    // Try to get booking ID from URL params first
-    const urlBookingId = searchParams.get("bookingId")
-
-    if (urlBookingId) {
-      setBookingId(urlBookingId)
-    } else {
-      // If not in URL, try to get from sessionStorage
-      const storedBookingId = sessionStorage.getItem("lastBookingId")
-      if (storedBookingId) {
-        setBookingId(storedBookingId)
-        // Clear it after retrieving
-        sessionStorage.removeItem("lastBookingId")
-      }
-    }
-  }, [playSound, searchParams])
+  }, [playSound, soundPlayed])
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-2xl rounded-lg border border-border bg-card p-8 text-center shadow-sm">
-        <div className="mb-6 flex justify-center">
-          <CheckCircle className="h-16 w-16 text-primary" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/50 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full bg-card rounded-lg shadow-lg p-8 border border-border"
+      >
+        <div className="flex flex-col items-center text-center">
+          <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+            <CheckCircle className="h-10 w-10 text-green-600" />
+          </div>
+
+          <h1 className="text-2xl font-bold mb-2">Booking Confirmed!</h1>
+          <p className="text-muted-foreground mb-6">Your mobile gym session has been successfully scheduled.</p>
+
+          <div className="bg-muted p-4 rounded-md w-full mb-6">
+            <div className="flex items-start mb-3">
+              <Calendar className="h-5 w-5 mr-2 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium">Booking Details</p>
+                <p className="text-sm text-muted-foreground">
+                  We've sent a confirmation email with all the details of your booking.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
+            <Button asChild className="flex-1">
+              <Link href="/">Return to Home</Link>
+            </Button>
+
+            <Button asChild variant="outline" className="flex-1">
+              <Link href="/booking">Book Another Session</Link>
+            </Button>
+          </div>
         </div>
-        <h1 className="mb-4 text-3xl font-bold text-foreground">Booking Confirmed!</h1>
-        <p className="mb-6 text-lg text-muted-foreground">
-          Thank you for booking with NomadFitness. We have received your request and will contact you shortly to confirm
-          the details.
-          {bookingId && <span className="block mt-2 font-medium">Booking Reference: {bookingId}</span>}
-        </p>
-        <div className="mb-8 rounded-lg bg-muted p-6 text-left">
-          <h2 className="mb-4 text-xl font-semibold text-foreground">What happens next?</h2>
-          <ol className="space-y-2 text-muted-foreground">
-            <li className="flex items-start">
-              <span className="mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                1
-              </span>
-              <span>Our team will review your booking request.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                2
-              </span>
-              <span>You will receive a confirmation email with all the details.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                3
-              </span>
-              <span>Our fitness team will arrive at your location at the scheduled time.</span>
-            </li>
-          </ol>
-        </div>
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button
-            variant="outline"
-            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            onClick={() => playSound("click")}
-            asChild
-          >
-            <Link href="/">Return to Home</Link>
-          </Button>
-          <Button
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={() => playSound("click")}
-            asChild
-          >
-            <Link href="/services">Explore More Services</Link>
-          </Button>
-        </div>
-      </div>
-      <SoundToggle />
+      </motion.div>
     </div>
   )
 }
