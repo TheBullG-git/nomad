@@ -55,9 +55,6 @@ export function Navbar() {
             <Link href="/services" className="nav-link">
               Services
             </Link>
-            <Link href="/truck-tour" className="nav-link">
-              Truck Tour
-            </Link>
             <Link href="/pricing" className="nav-link">
               Pricing
             </Link>
@@ -107,9 +104,6 @@ export function Navbar() {
                 </Link>
                 <Link href="/services" className="nav-link px-4 py-2" onClick={() => setIsMenuOpen(false)}>
                   Services
-                </Link>
-                <Link href="/truck-tour" className="nav-link px-4 py-2" onClick={() => setIsMenuOpen(false)}>
-                  Truck Tour
                 </Link>
                 <Link href="/pricing" className="nav-link px-4 py-2" onClick={() => setIsMenuOpen(false)}>
                   Pricing

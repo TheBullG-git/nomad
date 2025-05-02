@@ -1,4 +1,10 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export interface Database {
   public: {
@@ -181,7 +187,7 @@ export interface Database {
           location?: string | null
           notes?: string | null
           created_at?: string
-          updated_at?: string
+          updated_at: string
         }
       }
       fitness_stats: {
@@ -268,7 +274,7 @@ export interface Database {
           user_id: string
           trainer_notes?: string | null
           user_feedback?: string | null
-          session_rating?: string | null
+          session_rating?: number | null
           created_at: string
           updated_at: string
         }
@@ -280,7 +286,7 @@ export interface Database {
           user_feedback?: string | null
           session_rating?: string | null
           created_at?: string
-          updated_at?: string
+          updated_at: string
         }
       }
       truck_fleet: {
@@ -312,7 +318,7 @@ export interface Database {
           last_maintenance_date?: string | null
           next_maintenance_date?: string | null
           created_at?: string
-          updated_at?: string
+          updated_at: string
         }
       }
       booking_truck_assignments: {

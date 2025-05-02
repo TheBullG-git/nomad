@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { format } from "date-fns"
 import { CalendarIcon, Check, Dumbbell, Music } from "lucide-react"
@@ -17,8 +17,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { AnimatedBackground } from "@/components/animated-background"
-import { useSoundEffects } from "@/hooks/use-sound-effects"
-import { SoundToggle } from "@/components/sound-toggle"
 
 const STEPS = {
   SERVICE_SELECTION: 0,
@@ -31,7 +29,6 @@ export default function BookingPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialService = searchParams.get("service") || ""
-  const { playSound } = useSoundEffects()
 
   const [step, setStep] = useState(STEPS.SERVICE_SELECTION)
   const [loading, setLoading] = useState(false)
@@ -41,40 +38,17 @@ export default function BookingPage() {
     plan: "",
     name: "",
     email: "",
-    phone: "",
+    location: "",
     date: undefined as Date | undefined,
     time: "",
-    location: "",
     message: "",
   })
 
-  // Preload sounds
-  useEffect(() => {
-    // Preload all sounds to ensure they're ready when needed
-    const preloadSounds = async () => {
-      try {
-        // Touch each sound type to ensure they're loaded
-        playSound("click")
-        // Set volume to 0 temporarily
-        const tempAudio = new Audio("/sounds/success.mp3")
-        tempAudio.volume = 0
-        await tempAudio.play()
-        tempAudio.pause()
-      } catch (error) {
-        console.log("Sound preloading failed, likely due to autoplay restrictions")
-      }
-    }
-
-    preloadSounds()
-  }, [playSound])
-
   const updateFormData = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    playSound("selection")
   }
 
   const handleNext = () => {
-    playSound("navigation")
     setStep((prev) => prev + 1)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
@@ -92,14 +66,12 @@ export default function BookingPage() {
   }
 
   const handleBack = () => {
-    playSound("navigation")
     setStep((prev) => prev - 1)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    playSound("submit")
     setLoading(true)
 
     try {
@@ -114,20 +86,17 @@ export default function BookingPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        playSound("success")
         // Store the booking ID in session storage for the confirmation page
         if (data.bookingId) {
           sessionStorage.setItem("lastBookingId", data.bookingId)
         }
         router.push("/booking/confirmation")
       } else {
-        playSound("error")
         console.error("Booking submission failed:", data.message || "Unknown error")
         alert(data.message || "There was an error submitting your booking. Please try again.")
         handleFallbackSubmission()
       }
     } catch (error) {
-      playSound("error")
       console.error("Error submitting booking:", error)
       alert("There was an error connecting to the server. Please try again later.")
       handleFallbackSubmission()
@@ -140,7 +109,6 @@ export default function BookingPage() {
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       updateFormData("date", date)
-      playSound("selection")
       setCalendarOpen(false) // Close the calendar after selection
     }
   }
@@ -165,12 +133,11 @@ export default function BookingPage() {
           <RadioGroupItem value="gym" id="gym" className="peer sr-only" />
           <Label
             htmlFor="gym"
-            className="flex cursor-pointer flex-col rounded-lg border border-border bg-card p-4 md:p-6 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-            onClick={() => playSound("click")}
+            className="flex cursor-pointer flex-col rounded-lg border border-border bg-card p-4 md:p-6 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
           >
             <div className="flex items-center mb-4">
-              <div className="bg-primary/10 p-2 md:p-3 rounded-full mr-3">
-                <Dumbbell className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              <div className="bg-[#FF7F24]/10 p-2 md:p-3 rounded-full mr-3">
+                <Dumbbell className="h-5 w-5 md:h-6 md:w-6 text-[#FF7F24]" />
               </div>
               <span className="text-base md:text-lg font-medium text-foreground">Mobile Gym</span>
             </div>
@@ -183,12 +150,11 @@ export default function BookingPage() {
           <RadioGroupItem value="yoga" id="yoga" className="peer sr-only" />
           <Label
             htmlFor="yoga"
-            className="flex cursor-pointer flex-col rounded-lg border border-border bg-card p-4 md:p-6 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-            onClick={() => playSound("click")}
+            className="flex cursor-pointer flex-col rounded-lg border border-border bg-card p-4 md:p-6 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
           >
             <div className="flex items-center mb-4">
-              <div className="bg-primary/10 p-2 md:p-3 rounded-full mr-3">
-                <Music className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              <div className="bg-[#FF7F24]/10 p-2 md:p-3 rounded-full mr-3">
+                <Music className="h-5 w-5 md:h-6 md:w-6 text-[#FF7F24]" />
               </div>
               <span className="text-base md:text-lg font-medium text-foreground">Yoga and Dance</span>
             </div>
@@ -219,70 +185,65 @@ export default function BookingPage() {
               <RadioGroupItem value="single" id="single-gym" className="peer sr-only" />
               <Label
                 htmlFor="single-gym"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Single Session</span>
                   <p className="text-xs md:text-sm text-muted-foreground">One hour of gym training</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹300</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹300</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="monthly" id="monthly-gym" className="peer sr-only" />
               <Label
                 htmlFor="monthly-gym"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Monthly</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for one month</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹7,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹7,000</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="quarterly" id="quarterly-gym" className="peer sr-only" />
               <Label
                 htmlFor="quarterly-gym"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Quarterly</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for three months</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹12,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹12,000</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="biannual" id="biannual-gym" className="peer sr-only" />
               <Label
                 htmlFor="biannual-gym"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Biannual</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for six months</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹20,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹20,000</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="annual" id="annual-gym" className="peer sr-only" />
               <Label
                 htmlFor="annual-gym"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Annual</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for one year</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹25,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹25,000</span>
               </Label>
             </div>
           </>
@@ -292,70 +253,65 @@ export default function BookingPage() {
               <RadioGroupItem value="single" id="single-yoga" className="peer sr-only" />
               <Label
                 htmlFor="single-yoga"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Single Session</span>
                   <p className="text-xs md:text-sm text-muted-foreground">One hour of yoga or dance</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹200</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹200</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="monthly" id="monthly-yoga" className="peer sr-only" />
               <Label
                 htmlFor="monthly-yoga"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Monthly</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for one month</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹4,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹4,000</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="quarterly" id="quarterly-yoga" className="peer sr-only" />
               <Label
                 htmlFor="quarterly-yoga"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Quarterly</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for three months</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹8,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹8,000</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="biannual" id="biannual-yoga" className="peer sr-only" />
               <Label
                 htmlFor="biannual-yoga"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Biannual</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for six months</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹12,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹12,000</span>
               </Label>
             </div>
             <div>
               <RadioGroupItem value="annual" id="annual-yoga" className="peer sr-only" />
               <Label
                 htmlFor="annual-yoga"
-                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary"
-                onClick={() => playSound("click")}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 hover:bg-muted peer-data-[state=checked]:border-[#FF7F24] peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-[#FF7F24]"
               >
                 <div>
                   <span className="text-base md:text-lg font-medium text-foreground">Annual</span>
                   <p className="text-xs md:text-sm text-muted-foreground">Regular sessions for one year</p>
                 </div>
-                <span className="text-base md:text-lg font-bold text-primary">₹18,000</span>
+                <span className="text-base md:text-lg font-bold text-[#FF7F24]">₹18,000</span>
               </Label>
             </div>
           </>
@@ -384,7 +340,6 @@ export default function BookingPage() {
             id="name"
             value={formData.name}
             onChange={(e) => updateFormData("name", e.target.value)}
-            onFocus={() => playSound("click")}
             placeholder="John Doe"
             className="bg-background text-foreground"
             required
@@ -399,22 +354,7 @@ export default function BookingPage() {
             type="email"
             value={formData.email}
             onChange={(e) => updateFormData("email", e.target.value)}
-            onFocus={() => playSound("click")}
             placeholder="john@example.com"
-            className="bg-background text-foreground"
-            required
-          />
-        </div>
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="phone" className="text-foreground text-sm md:text-base">
-            Phone Number
-          </Label>
-          <Input
-            id="phone"
-            value={formData.phone}
-            onChange={(e) => updateFormData("phone", e.target.value)}
-            onFocus={() => playSound("click")}
-            placeholder="+91 98765 43210"
             className="bg-background text-foreground"
             required
           />
@@ -442,10 +382,6 @@ export default function BookingPage() {
               <Button
                 variant="outline"
                 className={cn("w-full justify-start text-left font-normal", !formData.date && "text-muted-foreground")}
-                onClick={() => {
-                  playSound("click")
-                  setCalendarOpen(true)
-                }}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {formData.date ? format(formData.date, "PPP") : <span>Pick a date</span>}
@@ -461,7 +397,7 @@ export default function BookingPage() {
             Time
           </Label>
           <Select value={formData.time} onValueChange={(value) => updateFormData("time", value)}>
-            <SelectTrigger className="bg-background text-foreground" onClick={() => playSound("click")}>
+            <SelectTrigger className="bg-background text-foreground">
               <SelectValue placeholder="Select a time" />
             </SelectTrigger>
             <SelectContent>
@@ -486,7 +422,6 @@ export default function BookingPage() {
             id="location"
             value={formData.location}
             onChange={(e) => updateFormData("location", e.target.value)}
-            onFocus={() => playSound("click")}
             placeholder="Your address or preferred location in Rajkot"
             className="bg-background text-foreground"
             required
@@ -500,7 +435,6 @@ export default function BookingPage() {
             id="message"
             value={formData.message}
             onChange={(e) => updateFormData("message", e.target.value)}
-            onFocus={() => playSound("click")}
             placeholder="Any special requirements or notes"
             className="min-h-[80px] md:min-h-[100px] bg-background text-foreground"
           />
@@ -531,7 +465,7 @@ export default function BookingPage() {
       case STEPS.PLAN_SELECTION:
         return !formData.plan
       case STEPS.PERSONAL_INFO:
-        return !formData.name || !formData.email || !formData.phone
+        return !formData.name || !formData.email
       case STEPS.BOOKING_DETAILS:
         return !formData.date || !formData.time || !formData.location
       default:
@@ -562,8 +496,8 @@ export default function BookingPage() {
                     "flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full text-xs md:text-sm font-medium",
                     step >= index
                       ? formData.service === "gym"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-primary text-primary-foreground"
+                        ? "bg-[#FF7F24] text-white"
+                        : "bg-[#FF7F24] text-white"
                       : "border border-border bg-background text-muted-foreground",
                   )}
                 >
@@ -598,7 +532,7 @@ export default function BookingPage() {
                   <Button
                     type="submit"
                     disabled={isNextDisabled() || loading}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm md:text-base px-3 md:px-4"
+                    className="bg-[#8B4513] text-white hover:bg-[#8B4513]/90 text-sm md:text-base px-3 md:px-4"
                   >
                     {loading ? "Submitting..." : "Book Now"}
                   </Button>
@@ -607,7 +541,7 @@ export default function BookingPage() {
                     type="button"
                     onClick={handleNext}
                     disabled={isNextDisabled()}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm md:text-base px-3 md:px-4"
+                    className="bg-[#8B4513] text-white hover:bg-[#8B4513]/90 text-sm md:text-base px-3 md:px-4"
                   >
                     Next
                   </Button>
@@ -617,7 +551,6 @@ export default function BookingPage() {
           </div>
         </div>
       </div>
-      <SoundToggle />
     </div>
   )
 }

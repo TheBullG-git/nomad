@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Mail, MapPin, Phone } from "lucide-react"
+import { Mail, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +13,6 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -37,7 +36,6 @@ export default function ContactPage() {
     setFormData({
       name: "",
       email: "",
-      phone: "",
       message: "",
     })
 
@@ -64,17 +62,6 @@ export default function ContactPage() {
 
           <div className="mb-8 space-y-6">
             <div className="flex items-start">
-              <div className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Phone className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="mb-1 font-semibold text-foreground">Phone</h3>
-                <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                <p className="text-muted-foreground">Mon-Fri: 8am - 8pm</p>
-              </div>
-            </div>
-
-            <div className="flex items-start">
               <div className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent text-accent-foreground">
                 <Mail className="h-5 w-5" />
               </div>
@@ -92,7 +79,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="mb-1 font-semibold text-foreground">Service Area</h3>
                 <p className="text-muted-foreground">
-                  We serve the greater metropolitan area and surrounding suburbs within a 30-mile radius.
+                  We serve the greater metropolitan area and surrounding suburbs within a 50-km radius.
                 </p>
               </div>
             </div>
@@ -162,20 +149,6 @@ export default function ContactPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-foreground">
-                  Phone Number
-                </Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+1 (555) 123-4567"
-                  className="bg-background text-foreground"
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="message" className="text-foreground">
                   Message
                 </Label>
@@ -215,7 +188,7 @@ export default function ContactPage() {
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h3 className="mb-2 text-lg font-semibold text-foreground">What areas do you serve?</h3>
             <p className="text-muted-foreground">
-              We currently serve the greater metropolitan area and surrounding suburbs within a 30-mile radius.
+              We currently serve the greater metropolitan area and surrounding suburbs within a 50-km radius.
             </p>
           </div>
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
@@ -227,8 +200,7 @@ export default function ContactPage() {
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h3 className="mb-2 text-lg font-semibold text-foreground">How do I cancel or reschedule?</h3>
             <p className="text-muted-foreground">
-              You can cancel or reschedule up to 24 hours before your session without any charge. Contact us by phone or
-              email.
+              You can cancel or reschedule up to 24 hours before your session without any charge. Contact us by email.
             </p>
           </div>
         </div>
